@@ -6,24 +6,23 @@ pub mod quote {
     use crate::api::ox::request::BSC_0X_URL;
 
     pub async fn swap_quote(
-        params_info: QuoteInputParams
+        input_params: &QuoteInputParams,
+        uri: &str
     ) -> Result<Response, String> {
         let mut params = QuoteParams::new();
-        params.set_params(
-            &params_info
-        );
-        let quary = params.build_quary_for_request();
+        params.set_params(&input_params);
+        let query = params.build_quary_for_request();
 
-        println!("quary: {:?}", quary);
+        println!("query: {:?}", query);
 
-        if let Err(error) = quary {
-            println!("quary errorL: {:?}", error);
+        if let Err(error) = query {
+            println!("query error: {:?}", error);
             return Err(error);
         }
 
         let mut url = BSC_0X_URL.to_string();
-        url.push_str("swap/v1/quote?");
-        url.push_str(quary.unwrap().as_str());
+        url.push_str(uri);
+        url.push_str(query.unwrap().as_str());
 
         let ox_token = dotenv!("OX_API_TOKEN");
         let client = Client::new();

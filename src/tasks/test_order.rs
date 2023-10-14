@@ -1,6 +1,8 @@
 pub mod tasks_test_order {
     use std::time::Duration;
+
     use serde_json::Value;
+
     use crate::api::ox::params::input_params_type::input_params_type::QuoteInputParams;
     use crate::api::ox::request::quote;
 
@@ -29,11 +31,17 @@ pub mod tasks_test_order {
             );
             //
 
+            let price_result = quote::quote::swap_quote( &quote_params_1, "swap/v1/price?").await;
+
+            println!("{}", price_result.unwrap().text().await.unwrap());
+
             let quote_result_2 = quote::quote::swap_quote(
-                quote_params_2
+                &quote_params_2,
+                "swap/v1/quote?"
             ).await;
             let quote_result_1 = quote::quote::swap_quote(
-                quote_params_1
+                &quote_params_1,
+                "swap/v1/quote?"
             ).await;
             if let Err(error) = quote_result_1 {
                 println!("Error msg: {}", error);
@@ -59,6 +67,7 @@ pub mod tasks_test_order {
             let buy_usdt = buy_bnb * price_2.as_str().unwrap().parse::<f64>().unwrap();
             println!("price: {}, amount usdt: 200, buy_bnb: {}", price_1, buy_bnb);
             println!("price: {}, amount wbnb: {buy_bnb}, buy_usdt: {}", price_2, buy_usdt);
+
             interval.tick().await;
         }
     }

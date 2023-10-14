@@ -2,3 +2,4 @@
 /.vscode
 /.env
 /.idea
+/src/config/Pairs.json

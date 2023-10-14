@@ -1,3 +1,5 @@
+pub mod pairs;
+
 pub mod config {
     use dotenv_codegen::dotenv;
 

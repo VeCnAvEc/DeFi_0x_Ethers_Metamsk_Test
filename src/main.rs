@@ -18,10 +18,12 @@ use client::{
     wallet::wallet::wallet::*,
     types::client_types::*
 };
+use crate::config::pairs::PairsConfig;
 
 #[tokio::main]
 async fn main() -> Result<(), String> {
     let config = Arc::new(config::config::EndpointConfig::new());
+    let pairs_config = PairsConfig::serialize_pairs_json();
 
     let provider_result = get_provider();
 
