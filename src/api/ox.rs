@@ -1,5 +1,6 @@
 pub mod request;
 pub mod params;
+pub mod price;
 
 use dotenv_codegen::dotenv;
 use ethers::{prelude::*};

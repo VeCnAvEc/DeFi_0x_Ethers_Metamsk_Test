@@ -4,6 +4,7 @@ mod ethers;
 mod api;
 mod client;
 mod tasks;
+mod logs;
 
 use std::sync::Arc;
 
@@ -19,11 +20,12 @@ use client::{
     types::client_types::*
 };
 use crate::config::pairs::PairsConfig;
+use crate::tasks::look_for_arbitration_opportunity::look_for_arbitration_opportunity::arbitration_opportunity;
 
 #[tokio::main]
 async fn main() -> Result<(), String> {
     let config = Arc::new(config::config::EndpointConfig::new());
-    let pairs_config = PairsConfig::serialize_pairs_json();
+    let pairs_config = Arc::new(PairsConfig::serialize_pairs_json());
 
     let provider_result = get_provider();
 
@@ -37,12 +39,7 @@ async fn main() -> Result<(), String> {
 
     let client = client::client::build_client(&wallet, &provider);
 
-    let order_book_params: OrderBookInputParams = (
-        Some("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2".to_string()),
-        Some("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48".to_string())
-    );
-
-    tasks::test_order::tasks_test_order::test_get_two_quotes_and_calculate_benefit_without_commission().await;
+    arbitration_opportunity(Arc::clone(&pairs_config), provider).await;
 
     // let order_book_result = order_book::order_book::get_order_book(
     //     order_book_params

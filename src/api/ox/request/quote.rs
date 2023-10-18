@@ -13,8 +13,6 @@ pub mod quote {
         params.set_params(&input_params);
         let query = params.build_quary_for_request();
 
-        println!("query: {:?}", query);
-
         if let Err(error) = query {
             println!("query error: {:?}", error);
             return Err(error);

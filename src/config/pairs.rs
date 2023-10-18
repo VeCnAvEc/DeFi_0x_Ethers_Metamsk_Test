@@ -1,12 +1,13 @@
 use std::fs::File;
 use std::io::Read;
+use std::sync::Arc;
 
 use ethers::addressbook::Address;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Token {
-    pub address: Address,
+    pub address: String,
     pub symbol: String,
     pub decimals: u8
 }
@@ -17,15 +18,15 @@ pub struct TokenPairs {
 }
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PairsConfig {
-    pairs_bsc: Vec<TokenPairs>
+    pairs_bsc: Arc<Vec<TokenPairs>>
 }
 
 impl TokenPairs {
-    fn get_sell_token(&self) -> &Token {
+    pub fn get_token0(&self) -> &Token {
         &self.token0
     }
 
-    fn get_buy_token(&self) -> &Token {
+    pub fn get_token1(&self) -> &Token {
         &self.token1
     }
 }
@@ -44,5 +45,9 @@ impl PairsConfig {
 
     pub fn get_bsc_pair(&self, index: usize) -> Option<&TokenPairs> {
         self.pairs_bsc.get(index)
+    }
+
+    pub fn get_all_bsc_pair_arc(&self) -> Arc<Vec<TokenPairs>> {
+        Arc::clone(&self.pairs_bsc)
     }
 }
